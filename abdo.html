@@ -160,7 +160,7 @@ async function askAI(){
   copyBtn.style.borderColor = '#22d3ee';
 
   try {
-    const response = await fetch('http://localhost:5000/ask', {
+    const response = await fetch('https://almsaqry-ai.onrender.com/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: promptInput.value })
