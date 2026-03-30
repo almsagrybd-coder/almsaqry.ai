@@ -1,32 +1,41 @@
-import express from 'express';
-import axios from 'axios';
-import cors from 'cors';
+const express = require('express');
+const fetch = require('node-fetch');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-app.use(cors()); // هذا السطر هو من سيحل مشكلة الموقع
 
-const API_KEY = "AIzaSyA0_inQkBQI58Eo0_-xUEz6GxPE4WCkvJU";
+// مفتاح API الخاص بك (تأكد من وضعه هنا مؤقتاً أو كمتغير بيئة)
+const GEMINI_API_KEY = "AIzaSyA0_inQkBQI58Eo0_-xUEz6GxPE4WCkvJU"; 
 
 app.post('/ask', async (req, res) => {
     const { prompt } = req.body;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
     try {
-        const response = await axios.post(url, {
-            contents: [{ parts: [{ text: prompt }] }]
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
         });
-        const answer = response.data.candidates[0].content.parts[0].text;
-        res.json({ answer: answer });
+
+        const data = await response.json();
+        
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            res.json({ answer: data.candidates[0].content.parts[0].text });
+        } else {
+            res.status(500).json({ error: "فشل استخراج الرد من Gemini" });
+        }
     } catch (error) {
-        console.error("خطأ:", error.message);
-        res.status(500).json({ error: "فشل في جلب الرد" });
+        console.error("Error:", error);
+        res.status(500).json({ error: "خطأ في الاتصال بسيرفرات جوجل" });
     }
 });
 
-app.listen(5000, () => {
-    console.log("------------------------------------");
-    console.log("السيرفر شغال الآن على المنفذ 5000");
-    console.log("يمكنك الآن تجربة الموقع..");
-    console.log("------------------------------------");
+// الجزء الأهم لضمان التشغيل على Render
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`سيرفر ALMSAQRY يعمل الآن على المنفذ ${PORT}`);
 });
