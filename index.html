@@ -159,12 +159,12 @@ async function askAI(){
   copyBtn.innerText = 'نسخ النص 📋';
   copyBtn.style.borderColor = '#22d3ee';
 
-  try {
-    const response = await fetch('https://almsaqry-a.onrender.com/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: promptInput.value })
-    });
+ // احذف السطر القديم الذي يحتوي على localhost وضعه هكذا:
+const response = await fetch('https://almsaqry-a.onrender.com/ask', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: promptInput.value })
+});
 
     const data = await response.json();
     
