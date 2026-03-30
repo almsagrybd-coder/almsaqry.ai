@@ -1,0 +1,16 @@
+{
+  "name": "ai",
+  "version": "1.0.0",
+  "description": "AI Project for Beginner's Guide",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.14.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
